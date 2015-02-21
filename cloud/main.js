@@ -1,5 +1,5 @@
 
-Parse.Cloud.define("hello", function(request, response) {
+Parse.Cloud.define("restrooms", function(request, response) {
 
   Parse.Cloud.httpRequest({
     url: 'http://www.refugerestrooms.org/api/v1/restrooms/by_location.json',
