@@ -12,15 +12,20 @@ Parse.Cloud.define("restrooms", function(request, response) {
     success: function(things) {
       var bathroomData = things.data;
 
+      console.log(request.params.lat)
+      var stringy = request.params.lat.toString() + ',' + request.params.lng.toString();
+      console.log('\nIMPORTANT:', stringy)
+
 
       yelp.request({
         params: {
           // term : request.params.lat,
-          cll : request.params.lat + ',' + request.params.lng
+          cll : stringy
+          // cll: [request.params.lat, request.params.lng]
         }
       }).then(function(httpResponse) {
         response.success(httpResponse.data);
-      }, res.error);
+      }, response.error);
 
           // bathroomData = bathroomData.map(function(toilet) {
 
@@ -43,11 +48,11 @@ Parse.Cloud.define("restrooms", function(request, response) {
           // })
 
           // response.success(bathroomData);
-        },
-        error: function(httpResponse) {
-          response.error('Request failed with response code ' + httpResponse.status);
-        }
-      });
+      //   },
+      //   error: function(httpResponse) {
+      //     response.error('Request failed with response code ' + httpResponse.status);
+      //   }
+      // });
 
 
 

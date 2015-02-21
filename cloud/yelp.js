@@ -13,11 +13,10 @@ exports.request = function (opts) {
   var request = {};
   request.url = 'http://api.yelp.com/v2/search';
   request.method = opts.method || 'GET';
-  request.params = params || {};
+  request.params = opts.params || {};
   var authProps = getAuthProperties(request);
   request.headers = {
-    'Authorization': getAuthHeader(authProps),
-    'User-Agent': USER_AGENT
+    'Authorization': getAuthHeader(authProps)
   };
   return Parse.Cloud.httpRequest(request);
 };
