@@ -22,14 +22,21 @@
 
         Parse.initialize("CLeeiHOj4n2Ihwh5Ff6lcaXGCwqvSxvR8mAu7KR1", "TnxYWDOCVO4qJUalicnuPpduwCd1xsm8T6Tl3s4u");
 
-        Parse.Cloud.run('hello', {}, {
+        Parse.Cloud.run('hello', {lat: '37.431048', lng: '-122.164754'}, {
           success: function(result) {
-            // result is 'Hello world!'
             console.log(result)
           },
           error: function(error) {
           }
         });
+
+        // Parse.Cloud.run('averageStars', { movie: 'The Matrix' }, {
+        //   success: function(ratings) {
+        //     // ratings should be 4.5
+        //   },
+        //   error: function(error) {
+        //   }
+        // });
       </script>
     </div>
   </body>

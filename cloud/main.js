@@ -1,6 +1,20 @@
 
-// Use Parse.Cloud.define to define as many cloud functions as you want.
-// For example:
 Parse.Cloud.define("hello", function(request, response) {
-  response.success("Hello world!");
+
+  Parse.Cloud.httpRequest({
+    url: 'http://www.refugerestrooms.org/api/v1/restrooms/by_location.json',
+    params: {
+      lat : request.params.lat,
+      lng : request.params.lng,
+    },
+    success: function(httpResponse) {
+      response.success(httpResponse.data);
+    },
+    error: function(httpResponse) {
+      response.error('Request failed with response code ' + httpResponse.status);
+    }
+  });
+
 });
+
+
