@@ -20,9 +20,11 @@
       <p>If you want something a bit more dynamic, delete this file and check out <a href="https://parse.com/docs/hosting_guide#webapp">our hosting docs</a>.</p>
       <script>
 
+        var Reviews = Parse.Object.extend("Reviews")
+
         Parse.initialize("CLeeiHOj4n2Ihwh5Ff6lcaXGCwqvSxvR8mAu7KR1", "TnxYWDOCVO4qJUalicnuPpduwCd1xsm8T6Tl3s4u");
 
-        Parse.Cloud.run('hello', {lat: '37.431048', lng: '-122.164754'}, {
+        Parse.Cloud.run('restrooms', {lat: '37.431048', lng: '-122.164754'}, {
           success: function(result) {
             console.log(result)
           },
