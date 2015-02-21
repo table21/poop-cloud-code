@@ -1,36 +1,54 @@
 
 Parse.Cloud.define("restrooms", function(request, response) {
-
   Parse.Cloud.httpRequest({
     url: 'http://www.refugerestrooms.org/api/v1/restrooms/by_location.json',
     params: {
       lat : request.params.lat,
-      lng : request.params.lng,
+      lng : request.params.lng
     },
     success: function(httpResponse) {
-      var bathroomData = httpResponse.data;
+      var pointList = httpResponse.data;
+      var idList = pointList.map(function(toilet) { return ("refugerestrooms_" + toilet.id); });
+      var query = new Parse.Query("RefugeComment");
+      query.containedIn("comment_id", idList);
+      query.find({
+        success: function(commentList) {
+          var bathroomData = httpResponse.data.map(function(toilet) {
+            var current = {};
+            var currentLocation = new Parse.GeoPoint({
+              latitude: toilet.latitude, 
+              longitude: toilet.longitude 
+            });
+            current.location = currentLocation;
 
-      bathroomData = bathroomData.map(function(toilet) {
+            current["name"] = toilet.name;
+            current["id"] = "refugerestrooms_" + toilet.id;
+            current["features"] = {
+              "disabled": toilet.accessible
+            };
+            current["comments"] = response;
 
-        var toiletLocation = new Parse.GeoPoint({latitude: request.params.lat, longitude: request.params.lng });
-        toilet.location = toiletLocation;
+            return current;
+          });
 
-        var reviews = new Parse.Query("Review");
-        reviews.equalTo("location", toiletLocation);
-        reviews.find({
-          success: function(results) {
-            toilet.reviews = results;
-          },
-          error: function() {
-            // response.error("location lookup failed");
-          }
-        });
+          var comments = {};
+          commentList.forEach(function(comment) { 
+            if (!comments[comment.attributes["comment_id"]]) {
+              comments[comment.attributes["comment_id"]] = [];
+            }
+            comments[comment.attributes["comment_id"]].push(comment.attributes["text"]);
+          });
 
-        return toilet;
+          bathroomData.map(function(toilet) {
+            toilet.comments = comments[toilet.id];
+          });
 
-      })
-
-      response.success(bathroomData);
+          response.success(bathroomData);
+        },
+        error: function(myObject, error) {
+          response.error(error);
+        }
+      });
     },
     error: function(httpResponse) {
       response.error('Request failed with response code ' + httpResponse.status);
