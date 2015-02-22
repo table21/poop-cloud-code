@@ -4,7 +4,8 @@ Parse.Cloud.define("restrooms", function(request, response) {
     url: 'http://www.refugerestrooms.org/api/v1/restrooms/by_location.json',
     params: {
       lat : request.params.lat,
-      lng : request.params.lng
+      lng : request.params.lng,
+      per_page: 50
     },
     success: function(httpResponse) {
       var pointList = httpResponse.data;
